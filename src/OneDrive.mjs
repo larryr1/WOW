@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createWriteStream } from 'fs';
-import config from "../config.mjs";
+import config from "./Config.js";
 
 export async function GetLatestSharedWow(graphToken, senderEmail) {
   return new Promise(async (resolve, reject) => {
@@ -11,8 +11,10 @@ export async function GetLatestSharedWow(graphToken, senderEmail) {
     // WOWs will always follow a "WOW [int]-[int].pptx" format.
 
     // Filter only files that are from designated email and match the name format.
+    let wowRegex = /WOW\s+[0-9]+-[0-9]+\.pptx/i;
+
     var sharedWows = response.data.value.filter(item => {
-      return (item.createdBy.user.email == config.from && config.fileNameRegex.test(item.name));
+      return (item.createdBy.user.email == config.from && wowRegex.test(item.name));
     });
 
     // Check for none

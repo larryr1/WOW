@@ -1,4 +1,4 @@
-import config from "../config.mjs";
+import config from "./Config.js";
 import { GetAuthorizationCode, GetGraphToken } from "./Authorization.mjs";
 import { GetLatestWowInformation, GetMessageAttachments } from "./Messages.mjs";
 import { GetLatestSharedWow, GetDownloadUrl, DownloadFileFromUrl } from "./OneDrive.mjs";
@@ -96,25 +96,4 @@ async function GetWowFromShared(graphToken) {
     
   }, 2000);
 
-  
-
 })();
-
-export async function GetWow(options) {
-
-  if (!options.fileName) {
-    throw new Error("fileName is not present in the options argument.");
-  }
-
-  if (!options.client) {
-    throw new Error("client object is not present in the options argument.");
-  }
-
-  if (!options.client.clientId) {
-    throw new Error("client.clientId is not present in the options argument.");
-  }
-
-  if (!options.client.clientSecret) {
-    throw new Error("client.clientSecret is not present in the options argument.");
-  }
-}

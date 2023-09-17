@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import config from '../config.mjs';
+import config from './Config.js';
 import path from 'path';
 
 export async function RunPowerpoint(file) {

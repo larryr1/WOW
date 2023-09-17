@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 import { parse } from "node:querystring";
 import axios from "axios";
 import { URLSearchParams } from "node:url";
-import config from "../config.mjs";
+import config from "./Config.js";
 
 export async function GetAuthorizationCode() {
   return new Promise(async (resolve, reject) => {
