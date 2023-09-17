@@ -10,9 +10,8 @@ export async function GetLatestWowInformation(graphToken) {
 
   let unfilteredWows = response.data.value;
   let filteredWows = unfilteredWows.filter(email => (email.subject.includes("WOW") && email.sender.emailAddress.address == config.from));
-  console.log(JSON.stringify(filteredWows));
   return filteredWows[0];
-  
+
 }
 
 /**
