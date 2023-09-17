@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createWriteStream } from 'fs';
-import config from "../config.mjs";
+import config from "./Config.js";
 
 export async function GetLatestSharedWow(graphToken, senderEmail) {
   return new Promise(async (resolve, reject) => {
@@ -12,7 +12,7 @@ export async function GetLatestSharedWow(graphToken, senderEmail) {
 
     // Filter only files that are from designated email and match the name format.
     var sharedWows = response.data.value.filter(item => {
-      return (item.createdBy.user.email == config.from && config.fileNameRegex.test(item.name));
+      return (item.createdBy.user.email == config.from && new RegExp(config.fileNameRegex).test(item.name));
     });
 
     // Check for none

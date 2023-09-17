@@ -1,0 +1,16 @@
+{
+  "from": "kyryliw.michael@somersetcollegeprep.org",
+
+  "fileNameRegex": "/WOW\\s+[0-9]+-[0-9]+\\.pptx/i",
+
+  "tenantId": "b48e6967-6899-4f70-b044-744ade464561",
+  "clientId": "a8da8bb0-510c-4fcb-8f56-76b6585e9f82",
+  "clientSecret": "EUU8Q~DXnj_IpjhDzd-gkpDrVjY5eMYKBVBxrbAG",
+  
+  "powerpointPath": "C:\\Program Files\\Microsoft Office 15\\root\\office15\\POWERPNT.EXE",
+
+  "email": "scpasub@somersetcollegeprep.org",
+  "password": "Spartans123",
+
+  "showPuppeteerWindow": false
+}
