@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src\\GetWOW.mjs"
   },
-  "bin": "node src\\getWOW.mjs",
+  "bin": {
+    "run-wow": "src/GetWOW.mjs"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

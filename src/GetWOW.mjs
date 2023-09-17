@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import config from "./Config.js";
 import { GetAuthorizationCode, GetGraphToken } from "./Authorization.mjs";
 import { GetLatestWowInformation, GetMessageAttachments } from "./Messages.mjs";
