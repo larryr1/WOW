@@ -5,63 +5,56 @@ import { exec } from "node:child_process";
 import config from "./Config.js";
 
 export async function GetLatestWowInformation(graphToken) {
-  return new Promise(async (resolve, reject) => {
 
-    await axios.get("https://graph.microsoft.com/v1.0/me/messages?$search=WOW", { headers: { Authorization: `Bearer ${graphToken}`}}).then(response => {
-      let matchDate = new Date();
-      let matchString = `WOW ${matchDate.getMonth()}/${matchDate.getDate()}`;
+  const response = await axios.get("https://graph.microsoft.com/v1.0/me/messages?$search=WOW", { headers: { Authorization: `Bearer ${graphToken}`}});
 
-       let unfilteredWows = response.data.value;
-       let filteredWows = unfilteredWows.filter(email => (email.subject.includes("WOW") && email.sender.emailAddress.address == config.from));
-      
-      resolve(filteredWows[0])
-      
-    });
+  let unfilteredWows = response.data.value;
+  let filteredWows = unfilteredWows.filter(email => (email.subject.includes("WOW") && email.sender.emailAddress.address == config.from));
+  return filteredWows[0];
 
-  });
 }
 
+/**
+ * 
+ * @param {string} graphToken Token to use with the Microsoft Graph API. 
+ * @param {*} messageId The ID of the message (email) to get attachments for.
+ * @returns {object[]} Array of attachments for the message.
+ */
 export async function GetMessageAttachments(graphToken, messageId) {
-  return new Promise(async (resolve, reject) => {
 
-    const response = await axios.get(`https://graph.microsoft.com/v1.0/me/messages/${messageId}/attachments`, { headers: { Authorization: `Bearer ${graphToken}`}});
-    resolve(response.data.value);
-
-  })
+  const response = await axios.get(`https://graph.microsoft.com/v1.0/me/messages/${messageId}/attachments`, { headers: { Authorization: `Bearer ${graphToken}`}});
+  return response;
 }
+
 
 export async function DownloadWow(graphToken, wowId) {
-  return new Promise(async (resolve, reject) => {
-    await axios.get(`https://graph.microsoft.com/v1.0/me/messages/${wowId}/attachments`, { headers: { Authorization: `Bearer ${graphToken}`}}).then(response => {
 
-      if (!response.data) {
-        reject("responsed.data was not present in the Axios response.");
-        return;
-      }
+  await axios.get(`https://graph.microsoft.com/v1.0/me/messages/${wowId}/attachments`, { headers: { Authorization: `Bearer ${graphToken}`}}).then(response => {
 
-      console.log("Response.data: " + JSON.stringify(response.data));
+    if (!response.data) {
+      throw new Error("responsed.data was not present in the Axios response.");
+    }
 
-      if (!response.data.value[0]) {
-        reject("response.data is present in the Axios but the array is empty. There are no attachments on this message. The WOW is probably linked in the message HTML.");
-        return;
-      }
+    console.log("Response.data: " + JSON.stringify(response.data));
 
-      if (!response.data.value[0].contentBytes) {
-        reject("An attachment is present but it has no contentBytes.")
-        return;
-      }
+    if (!response.data.value[0]) {
+      throw new Error("response.data is present in the Axios but the array is empty. There are no attachments on this message. The WOW is probably linked in the message HTML.");
+    }
 
-      let buffer = Buffer.from(response.data.value[0].contentBytes, 'base64');
+    if (!response.data.value[0].contentBytes) {
+      throw new Error("An attachment is present but it has no contentBytes.");
+    }
 
-      if (existsSync("wow.pptx")) {
-        unlinkSync("wow.pptx");
-      }
+    let buffer = Buffer.from(response.data.value[0].contentBytes, "base64");
 
-      writeFileSync("wow.pptx", buffer);
-      exec("start powerpnt.exe /S wow.pptx");
+    if (existsSync("wow.pptx")) {
+      unlinkSync("wow.pptx");
+    }
 
-    }).catch(e => {
-      reject(e);
-    });
+    writeFileSync("wow.pptx", buffer);
+    exec("start powerpnt.exe /S wow.pptx");
+
+  }).catch(e => {
+    throw new Error(e);
   });
 }

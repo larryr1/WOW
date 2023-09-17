@@ -5,6 +5,9 @@ import { URLSearchParams } from "node:url";
 import config from "./Config.js";
 
 export async function GetAuthorizationCode() {
+
+  // I can't figure out a way to refactor this to get rid of the promise here. I'll do it later.
+  // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
 
     // Puppeteer start
@@ -40,17 +43,17 @@ export async function GetAuthorizationCode() {
       // This is specifically worked to navigate the login page of my organization. You may change it for your own needs.
       await page.goto(`https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize?client_id=${config.clientId}&scope=Mail.read%20Files.Read.All&response_type=code&response_mode=query&login_hint=${config.email}`);
       // Fill in password
-      const passwordInput = await page.waitForSelector(`input#passwordInput`);
+      const passwordInput = await page.waitForSelector("input#passwordInput");
       await passwordInput.type(config.password);
       await passwordInput.dispose();
 
       // Submit password
-      const passwordSubmit = await page.waitForSelector(`span#submitButton`);
+      const passwordSubmit = await page.waitForSelector("span#submitButton");
       await passwordSubmit.click();
       await passwordSubmit.dispose();
 
       // Accept application authorization prompt
-      const declineStayButton = await page.waitForSelector(`input[type='submit']`);
+      const declineStayButton = await page.waitForSelector("input[type='submit']");
       await declineStayButton.click();
       await declineStayButton.dispose(); 
 
@@ -67,34 +70,34 @@ export async function GetAuthorizationCode() {
 
 
 export async function GetGraphToken(authorizationCode, clientSecret) {
-  return new Promise(async (resolve, reject) => {
 
-    // Ensure arguments
-    if (!authorizationCode) { reject(new Error("authorizationCode was not passed.")); return; }
-    if (!clientSecret) { reject(new Error("clientSecret was not passed.")); return; }
+  // Ensure arguments
+  if (!authorizationCode) { throw new Error("authorizationCode was not passed."); }
+  if (!clientSecret) { throw new Error("clientSecret was not passed."); }
 
-    // Obtain graph access token
-    var accessParams = new URLSearchParams();
-    accessParams.append("grant_type", "authorization_code");
-    accessParams.append("client_id", config.clientId);
-    accessParams.append("client_secret", config.clientSecret);
-    accessParams.append("code", authorizationCode);
+  // Obtain graph access token
+  var accessParams = new URLSearchParams();
+  accessParams.append("grant_type", "authorization_code");
+  accessParams.append("client_id", config.clientId);
+  accessParams.append("client_secret", config.clientSecret);
+  accessParams.append("code", authorizationCode);
 
-    // Request for graph token
-    await axios.post(`https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/token`, accessParams).then(response => {
+  // Request for graph token
+  try {
+    const response = await axios.post(`https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/token`, accessParams);
 
-      // Ensure success
-      if (!response.data) { reject(new Error("A request error was uncaught, and response.data is not present.")); return; }
-      if (!response.data.access_token) { reject(new Error("A request error was uncaught and response.data.access_token is not present.")); return; }
+    // Ensure success
+    if (!response.data) { throw new Error("A request error was uncaught, and response.data is not present."); }
+    if (!response.data.access_token) { throw new Error("A request error was uncaught and response.data.access_token is not present."); }
 
-      resolve(response.data.access_token);
+    return response.data.access_token;
 
-    }).catch(error => {
-      reject(new Error("Error obtaining Graph access token: " + error));
-      if (error.response) {
-        console.log(`Response data: ${JSON.stringify(error?.response?.data)}`);
-      }
-    });
+  } catch (error) {
 
-  });
+    if (error.response) {
+      console.log(`Response data: ${JSON.stringify(error?.response?.data)}`);
+    }
+
+    throw new Error("Error obtaining Graph access token: " + error);
+  }
 }

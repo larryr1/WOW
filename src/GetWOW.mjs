@@ -4,9 +4,8 @@ import { GetAuthorizationCode, GetGraphToken } from "./Authorization.mjs";
 import { GetLatestWowInformation, GetMessageAttachments } from "./Messages.mjs";
 import { GetLatestSharedWow, GetDownloadUrl, DownloadFileFromUrl } from "./OneDrive.mjs";
 import { RunPowerpoint, RunTransformer } from "./Transformer.mjs";
-import { existsSync, unlinkSync, writeFileSync } from 'fs';
+import { existsSync, unlinkSync, writeFileSync } from "fs";
 
-const clientSecret = config.clientSecret;
 
 function authorizationCodeError(e) {
   throw new Error(e);
@@ -20,9 +19,6 @@ function getLatestWowInformationError(e) {
   throw new Error(e);
 }
 
-function downloadWowError(e) {
-  throw new Error(e);
-}
 
 async function GetWowFromShared(graphToken) {
 
@@ -60,7 +56,8 @@ async function GetWowFromShared(graphToken) {
   console.log("Finding latest WOW.");
   const latestWowInformation = await GetLatestWowInformation(graphToken).catch(getLatestWowInformationError);
 
-  console.log(`Latest WOW has subject "${latestWowInformation.subject}"`)
+  console.log(JSON.stringify(latestWowInformation));
+  console.log(`Latest WOW has subject "${latestWowInformation.subject}"`);
 
   // Take appropriate action depending on how the WOW was sent. Both routes download the wow to "wow.pptx".
   if (latestWowInformation.hasAttachments) {
@@ -69,14 +66,14 @@ async function GetWowFromShared(graphToken) {
     console.log("Downloading email attachment.");
     let attachments = await GetMessageAttachments(graphToken, latestWowInformation.id);
     console.log("Writing bytes.");
-    console.log(attachments[0].name)
-    let buffer = Buffer.from(attachments[0].contentBytes, 'base64');
+    console.log(attachments[0].name);
+    let buffer = Buffer.from(attachments[0].contentBytes, "base64");
 
-      if (existsSync("wow.pptx")) {
-        unlinkSync("wow.pptx");
-      }
+    if (existsSync("wow.pptx")) {
+      unlinkSync("wow.pptx");
+    }
 
-      writeFileSync("wow.pptx", buffer);
+    writeFileSync("wow.pptx", buffer);
 
   } else {
 
