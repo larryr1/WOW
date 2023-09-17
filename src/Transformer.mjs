@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
-import config from '../config';
+import config from '../config.mjs';
+import path from 'path';
 
 export async function RunPowerpoint(file) {
 
@@ -17,7 +18,8 @@ export async function RunPowerpoint(file) {
 export async function RunTransformer(file) {
   
   return new Promise((resolve, reject) => {
-    exec(`PowerPointTransformer.exe "${file}"`, (error, stdout, stderr) => {
+    let transformerPath = path.resolve("./src/PowerPointTransformer.exe") + " " + file;
+    exec(transformerPath, (error, stdout, stderr) => {
       if (error) {
         reject(error);
       }

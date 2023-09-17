@@ -2,7 +2,7 @@ import axios from "axios";
 import { Buffer } from "node:buffer";
 import { writeFileSync, unlinkSync, existsSync } from "node:fs";
 import { exec } from "node:child_process";
-import config from "../config";
+import config from "../config.mjs";
 
 export async function GetLatestWowInformation(graphToken) {
   return new Promise(async (resolve, reject) => {
