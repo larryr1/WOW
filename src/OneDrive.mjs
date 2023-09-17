@@ -20,7 +20,7 @@ export async function GetLatestSharedWow(graphToken, senderEmail) {
       reject("No WOWs to show. It's probably some sort of holiday.")
     }
     
-    resolve(sharedWows[0]);
+    resolve(sharedWows[0]); 
 
   });
 }
