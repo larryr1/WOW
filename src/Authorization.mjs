@@ -40,17 +40,17 @@ export async function GetAuthorizationCode() {
       // This is specifically worked to navigate the login page of my organization. You may change it for your own needs.
       await page.goto(`https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize?client_id=${config.clientId}&scope=Mail.read%20Files.Read.All&response_type=code&response_mode=query&login_hint=${config.email}`);
       // Fill in password
-      const passwordInput = await page.waitForSelector(`input#passwordInput`);
+      const passwordInput = await page.waitForSelector("input#passwordInput");
       await passwordInput.type(config.password);
       await passwordInput.dispose();
 
       // Submit password
-      const passwordSubmit = await page.waitForSelector(`span#submitButton`);
+      const passwordSubmit = await page.waitForSelector("span#submitButton");
       await passwordSubmit.click();
       await passwordSubmit.dispose();
 
       // Accept application authorization prompt
-      const declineStayButton = await page.waitForSelector(`input[type='submit']`);
+      const declineStayButton = await page.waitForSelector("input[type='submit']");
       await declineStayButton.click();
       await declineStayButton.dispose(); 
 

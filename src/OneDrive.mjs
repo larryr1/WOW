@@ -1,8 +1,8 @@
 import axios from "axios";
-import { createWriteStream } from 'fs';
+import { createWriteStream } from "fs";
 import config from "./Config.js";
 
-export async function GetLatestSharedWow(graphToken, senderEmail) {
+export async function GetLatestSharedWow(graphToken) {
   return new Promise(async (resolve, reject) => {
 
     // Get recent shared items from OneDrive
@@ -19,7 +19,7 @@ export async function GetLatestSharedWow(graphToken, senderEmail) {
 
     // Check for none
     if (sharedWows.length == 0) {
-      reject("No WOWs to show. It's probably some sort of holiday.")
+      reject("Could not locate any WOW emails.");
     }
     
     resolve(sharedWows[0]); 

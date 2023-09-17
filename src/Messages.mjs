@@ -8,13 +8,11 @@ export async function GetLatestWowInformation(graphToken) {
   return new Promise(async (resolve, reject) => {
 
     await axios.get("https://graph.microsoft.com/v1.0/me/messages?$search=WOW", { headers: { Authorization: `Bearer ${graphToken}`}}).then(response => {
-      let matchDate = new Date();
-      let matchString = `WOW ${matchDate.getMonth()}/${matchDate.getDate()}`;
 
-       let unfilteredWows = response.data.value;
-       let filteredWows = unfilteredWows.filter(email => (email.subject.includes("WOW") && email.sender.emailAddress.address == config.from));
+      let unfilteredWows = response.data.value;
+      let filteredWows = unfilteredWows.filter(email => (email.subject.includes("WOW") && email.sender.emailAddress.address == config.from));
       
-      resolve(filteredWows[0])
+      resolve(filteredWows[0]);
       
     });
 
@@ -27,7 +25,7 @@ export async function GetMessageAttachments(graphToken, messageId) {
     const response = await axios.get(`https://graph.microsoft.com/v1.0/me/messages/${messageId}/attachments`, { headers: { Authorization: `Bearer ${graphToken}`}});
     resolve(response.data.value);
 
-  })
+  });
 }
 
 export async function DownloadWow(graphToken, wowId) {
@@ -47,11 +45,11 @@ export async function DownloadWow(graphToken, wowId) {
       }
 
       if (!response.data.value[0].contentBytes) {
-        reject("An attachment is present but it has no contentBytes.")
+        reject("An attachment is present but it has no contentBytes.");
         return;
       }
 
-      let buffer = Buffer.from(response.data.value[0].contentBytes, 'base64');
+      let buffer = Buffer.from(response.data.value[0].contentBytes, "base64");
 
       if (existsSync("wow.pptx")) {
         unlinkSync("wow.pptx");
