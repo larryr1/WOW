@@ -11,8 +11,10 @@ export async function GetLatestSharedWow(graphToken, senderEmail) {
     // WOWs will always follow a "WOW [int]-[int].pptx" format.
 
     // Filter only files that are from designated email and match the name format.
+    let wowRegex = /WOW\s+[0-9]+-[0-9]+\.pptx/i;
+
     var sharedWows = response.data.value.filter(item => {
-      return (item.createdBy.user.email == config.from && new RegExp(config.fileNameRegex).test(item.name));
+      return (item.createdBy.user.email == config.from && wowRegex.test(item.name));
     });
 
     // Check for none

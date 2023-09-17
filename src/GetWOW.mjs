@@ -40,7 +40,7 @@ async function GetWowFromShared(graphToken) {
 
 }
 
-export default GetWow = async (config) => {
+(async () => {
 
   // Delete leftover files.
   console.log("Deleting old files.");
@@ -95,6 +95,5 @@ export default GetWow = async (config) => {
     await RunPowerpoint("wow.pptx-transformed.pptx");
     
   }, 2000);
-};
 
-GetWow();
+})();

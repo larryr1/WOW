@@ -1,4 +1,4 @@
-import path from "path";
+const path = require("path");
 
 const configPath = path.join(process.cwd(), "./wow_config.json");
 
