@@ -1,9 +1,9 @@
-export default config = {
+const config = {
   // The email address to expect new slides to come from.
   from: "",
 
   // A Regular Expression that dictates the expected file name of the slideshow.
-  fileNameRegex: /WOW\s+[0-9]+-[0-9]+\.pptx/i,
+  fileNameRegex: new RegExp(/WOW\s+[0-9]+-[0-9]+\.pptx/i),
 
   // Several options related to the Azure Auth application.
   // Information from the Azure application.
@@ -11,6 +11,7 @@ export default config = {
   clientId: "",
   clientSecret: "",
 
+  // Path to your system's PowerPoint executable.
   powerpointPath: "",
 
   // The login information for the account that is sent the slideshows
@@ -21,3 +22,5 @@ export default config = {
   //    this browser window for better insight or debugging. Recommended to keep this false in production.
   showPuppeteerWindow: false
 }
+
+export default config;
