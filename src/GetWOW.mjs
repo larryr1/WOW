@@ -56,8 +56,7 @@ async function GetWowFromShared(graphToken) {
   console.log("Finding latest WOW.");
   const latestWowInformation = await GetLatestWowInformation(graphToken).catch(getLatestWowInformationError);
 
-  console.log(JSON.stringify(latestWowInformation));
-  console.log(`Latest WOW has subject "${latestWowInformation.subject}"`);
+  console.log(`Latest WOW is from email "${latestWowInformation.subject}"`);
 
   // Take appropriate action depending on how the WOW was sent. Both routes download the wow to "wow.pptx".
   if (latestWowInformation.hasAttachments) {
