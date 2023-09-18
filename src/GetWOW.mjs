@@ -3,7 +3,7 @@ import config from "./Config.js";
 import { GetAuthorizationCode, GetGraphToken } from "./Authorization.mjs";
 import { GetLatestWowInformation, GetMessageAttachments } from "./Messages.mjs";
 import { GetLatestSharedWow, GetDownloadUrl, DownloadFileFromUrl } from "./OneDrive.mjs";
-import { RunPowerpoint, RunTransformer } from "./Transformer.mjs";
+import { RunPowerpoint, RunTransformer } from "./Transformer.js";
 import { existsSync, unlinkSync, writeFileSync } from "fs";
 
 

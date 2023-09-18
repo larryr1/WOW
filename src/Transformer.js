@@ -1,8 +1,10 @@
-import { exec } from "child_process";
-import config from "./Config.js";
-import path from "path";
+const { exec } = require("child_process");
+const config = require("./Config.js");
+const path = require("path"); 
 
-export async function RunPowerpoint(file) {
+module.exports = {};
+
+const RunPowerpoint = async (file) => {
 
   return new Promise((resolve, reject) => {
     exec(`"${config.powerpointPath}" /S "${file}"`, (error, stdout, stderr) => {
@@ -13,12 +15,12 @@ export async function RunPowerpoint(file) {
       resolve(stdout? stdout : stderr);
     });
   });
-}
 
-export async function RunTransformer(file) {
-  
+};
+
+const RunTransformer = async (file) => {
   return new Promise((resolve, reject) => {
-    let transformerPath = path.resolve("./src/PowerPointTransformer.exe") + " " + file;
+    let transformerPath = path.resolve(__dirname, "PowerPointTransformer.exe") + " " + file;
     exec(transformerPath, (error, stdout, stderr) => {
       if (error) {
         reject(error);
@@ -27,4 +29,7 @@ export async function RunTransformer(file) {
       resolve(stdout? stdout : stderr);
     });
   });
-}
+};
+
+module.exports.RunTransformer = RunTransformer;
+module.exports.RunPowerpoint = RunPowerpoint;
