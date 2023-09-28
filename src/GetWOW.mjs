@@ -5,6 +5,7 @@ import { GetLatestWowInformation, GetMessageAttachments } from "./Messages.mjs";
 import { GetLatestSharedWow, GetDownloadUrl, DownloadFileFromUrl } from "./OneDrive.mjs";
 import { RunPowerpoint, RunTransformer } from "./Transformer.js";
 import { existsSync, unlinkSync, writeFileSync } from "fs";
+import { fileTypeFromFile } from "file-type";
 
 
 function authorizationCodeError(e) {
@@ -79,6 +80,16 @@ async function GetWowFromShared(graphToken) {
     // There is no attachment in the email and the WOW needs to be downloaded from the "Shared With Me" files.
     await GetWowFromShared(graphToken);
 
+  }
+
+  // Check to make sure downloaded file is a PowerPoint. The transformer throws cryptic errors if it's passed a non-pptx file.
+  const fileType = await fileTypeFromFile("wow.pptx");
+  const requiredMimeType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+  const requiredExtension = "pptx";
+  if (fileType.mime != requiredMimeType) {
+    throw new Error(`File MIME type ${fileType.mime} does not match required MIME type of ${requiredMimeType}.`);
+  } else if (fileType.ext.toLowerCase() != requiredExtension) {
+    throw new Error(`File extension .${fileType.ext} does not match required extension .${requiredExtension}.`);
   }
 
   // The transformer uses PowerPoint Interop DLLs to apply an automatic transition to every slide and sets the slideshow to loop.
