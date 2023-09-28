@@ -23,7 +23,7 @@ export async function GetLatestWowInformation(graphToken) {
 export async function GetMessageAttachments(graphToken, messageId) {
 
   const response = await axios.get(`https://graph.microsoft.com/v1.0/me/messages/${messageId}/attachments`, { headers: { Authorization: `Bearer ${graphToken}`}});
-  return response;
+  return response.data.value;
 }
 
 
