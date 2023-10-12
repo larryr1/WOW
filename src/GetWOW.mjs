@@ -100,12 +100,13 @@ async function GetWowFromShared(graphToken) {
       console.log("Starting a cached WOW.");
       await RunPowerpoint("wow.pptx-transformed.pptx");
     } else {
-      console.log("No WOW was cached. Aborting.");
+      console.log("No WOW is cached. Aborting.");
     }
 
     return;
   }
   
+  // Remove file before transformer
   if (existsSync("wow.pptx-transformed.pptx")) { unlinkSync("wow.pptx-transformed.pptx"); }
 
   // The transformer uses PowerPoint Interop DLLs to apply an automatic transition to every slide and sets the slideshow to loop.
