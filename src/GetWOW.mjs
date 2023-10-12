@@ -43,7 +43,6 @@ async function GetWowFromShared(graphToken) {
   // Delete leftover files.
   console.log("Deleting old files.");
   if (existsSync("wow.pptx")) { unlinkSync("wow.pptx"); }
-  if (existsSync("wow.pptx-transformed.pptx")) { unlinkSync("wow.pptx-transformed.pptx"); }
 
   // Obtain Microsoft authorization code.
   console.log("Obtaining Graph authorization code.");
@@ -86,11 +85,28 @@ async function GetWowFromShared(graphToken) {
   const fileType = await fileTypeFromFile("wow.pptx");
   const requiredMimeType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
   const requiredExtension = "pptx";
-  if (fileType.mime != requiredMimeType) {
-    throw new Error(`File MIME type ${fileType.mime} does not match required MIME type of ${requiredMimeType}.`);
-  } else if (fileType.ext.toLowerCase() != requiredExtension) {
-    throw new Error(`File extension .${fileType.ext} does not match required extension .${requiredExtension}.`);
+
+  try {
+    if (fileType.mime != requiredMimeType) {
+      throw new Error(`File MIME type ${fileType.mime} does not match required MIME type of ${requiredMimeType}.`);
+    } else if (fileType.ext.toLowerCase() != requiredExtension) {
+      throw new Error(`File extension .${fileType.ext} does not match required extension .${requiredExtension}.`);
+    }
+  } catch (error) {
+    console.log("Error: " + error);
+    
+    // Check for an existing transformed WOW and use it
+    if (existsSync("wow.pptx-transformed.pptx")) {
+      console.log("Starting a cached WOW.");
+      await RunPowerpoint("wow.pptx-transformed.pptx");
+    } else {
+      console.log("No WOW was cached. Aborting.");
+    }
+
+    return;
   }
+  
+  if (existsSync("wow.pptx-transformed.pptx")) { unlinkSync("wow.pptx-transformed.pptx"); }
 
   // The transformer uses PowerPoint Interop DLLs to apply an automatic transition to every slide and sets the slideshow to loop.
   console.log("Running transformer.");
