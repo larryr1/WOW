@@ -28,12 +28,19 @@ export async function GetAuthorizationCode() {
         await browser.close();
 
         resolve(accessCode);
+        return;
 
-      } else {
+      }
 
-        // Ignore request if it is not our callback url.
-        request.continue();
+      // Ignore request if it is not our callback url.
+      request.continue();
+    });
 
+    page.on("framenavigated", async frame => {
+      if (frame.url.toString().includes("/appverify")) {
+        const yes = await page.waitForSelector("button#idSIButton9");
+        await yes.click();
+        await yes.dispose();
       }
     });
 
