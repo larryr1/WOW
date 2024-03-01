@@ -37,13 +37,11 @@ export async function GetAuthorizationCode() {
     });
 
     page.on("framenavigated", async frame => {
-      setTimeout(async () => {
-        if (frame.url.toString().includes("/appverify")) {
-          const yes = await page.waitForSelector("[data-report-value='Submit']");
-          await yes.click();
-          await yes.dispose();
-        }
-      }, 2000);
+      if (frame.url.toString().includes("/appverify")) {
+        const yes = await page.waitForSelector("[data-report-value='Submit']");
+        await yes.click();
+        await yes.dispose();
+      }
     });
 
     try {
@@ -65,6 +63,11 @@ export async function GetAuthorizationCode() {
       const declineStayButton = await page.waitForSelector("input[type='submit']");
       await declineStayButton.click();
       await declineStayButton.dispose(); 
+
+      // Accept application authorization prompt
+      const decline2 = await page.waitForSelector("input[type='submit']");
+      await decline2.click();
+      await decline2.dispose(); 
 
     } catch (error) {
       reject(error);
