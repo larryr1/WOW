@@ -37,11 +37,13 @@ export async function GetAuthorizationCode() {
     });
 
     page.on("framenavigated", async frame => {
-      if (frame.url.toString().includes("/appverify")) {
-        const yes = await page.waitForSelector("button#idSIButton9");
-        await yes.click();
-        await yes.dispose();
-      }
+      setTimeout(async () => {
+        if (frame.url.toString().includes("/appverify")) {
+          const yes = await page.waitForSelector("button#idSIButton9");
+          await yes.click();
+          await yes.dispose();
+        }
+      }, 2000);
     });
 
     try {
