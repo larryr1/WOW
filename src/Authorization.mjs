@@ -39,7 +39,7 @@ export async function GetAuthorizationCode() {
     page.on("framenavigated", async frame => {
       setTimeout(async () => {
         if (frame.url.toString().includes("/appverify")) {
-          const yes = await page.waitForSelector("button#idSIButton9");
+          const yes = await page.waitForSelector("[data-report-value='Submit']");
           await yes.click();
           await yes.dispose();
         }
